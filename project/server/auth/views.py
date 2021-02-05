@@ -22,7 +22,7 @@ class RegisterAPI(MethodView):
 
     def post(self):
         # get the post data
-        post_data = request.get_json(); print(request)
+        post_data = request.get_json(force=True); print(request)
         # check if user already exists
         user = User.query.filter_by(email=post_data.get('email')).first()
         if not user:
@@ -66,3 +66,14 @@ auth_blueprint.add_url_rule(
     view_func=registration_view,
     methods=['POST', 'GET']
 )
+
+from project.server import app
+@app.route('/users/index', methods=('GET', 'POST'))
+def hello_world():
+    users = User.query.all()
+    result = []
+    for user in users:
+        result.append(user.email)
+    return  jsonify(result)
+       
+
